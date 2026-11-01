@@ -58,20 +58,6 @@ const setDemo = (type) => {
             barang keluar, dan audit stok secara akurat dan efisien.
           </p>
 
-          <div class="hero-stats">
-            <div class="hero-stat">
-              <span class="stat-num">5</span>
-              <span class="stat-text">Tabel Relasional MySQL</span>
-            </div>
-            <div class="hero-stat">
-              <span class="stat-num">RBAC</span>
-              <span class="stat-text">Role Based Access Control</span>
-            </div>
-            <div class="hero-stat">
-              <span class="stat-num">ACID</span>
-              <span class="stat-text">Atomic Transaction</span>
-            </div>
-          </div>
         </div>
       </div>
 
