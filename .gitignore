@@ -6,6 +6,7 @@ node_modules/
 .env
 .env.*
 !.env.example
+!.env.docker.example
 *.local
 
 # Production Build Outputs
@@ -55,4 +56,3 @@ desktop.ini
 .stylelintcache
 tmp/
 temp/
-

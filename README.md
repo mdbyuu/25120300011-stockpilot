@@ -76,7 +76,7 @@
    ```bash
    npm run dev
    ```
-   Backend aktif di: `http://localhost:5000`
+   Backend aktif di: `http://localhost:5001`
 
 ### 4. Menjalankan Frontend Vue 3
 1. Buka terminal baru pada folder `frontend`:
@@ -89,6 +89,36 @@
    npm run dev
    ```
 3. Buka browser pada alamat: **`http://localhost:5173`**
+
+## 🐳 Menjalankan dengan Docker Compose
+
+Docker Compose menjalankan tiga service: frontend Vue/Nginx, backend Express, dan MySQL dengan volume persisten.
+
+1. Pastikan Docker Desktop sudah berjalan.
+2. Buat file environment Docker:
+   ```bash
+   copy .env.docker.example .env
+   ```
+3. Ganti semua nilai password dan `JWT_SECRET` pada `.env`.
+4. Build dan jalankan service:
+   ```bash
+   docker compose up -d --build
+   ```
+5. Isi database satu kali:
+   ```bash
+   docker compose exec backend npm run seed
+   ```
+6. Buka aplikasi pada **`http://localhost:8080`**. API tersedia pada **`http://localhost:5002`**.
+
+Periksa status service dan endpoint database:
+```bash
+docker compose ps
+curl http://localhost:5002/api/health
+```
+
+Data MySQL disimpan pada volume `mysql_data`, sehingga restart container tidak menghapus data. Jangan menjalankan `docker compose down -v` kecuali memang ingin menghapus database dan seluruh datanya.
+
+Untuk deployment pada server Docker, ubah `FRONTEND_URL` dan `VITE_API_URL` menjadi domain HTTPS publik sebelum menjalankan `docker compose up -d --build`. Variabel `VITE_API_URL` tertanam saat frontend dibuild, jadi frontend harus dibuild ulang setelah nilainya berubah.
 
 ---
 

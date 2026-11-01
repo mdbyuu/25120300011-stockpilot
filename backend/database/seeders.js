@@ -8,10 +8,27 @@ const seedDatabase = async () => {
     const user = process.env.DB_USER || 'root';
     const password = process.env.DB_PASS || '';
     const dbName = process.env.DB_NAME || 'inventory_db';
+    const sslEnabled = process.env.DB_SSL === 'true';
+    const sslRejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false';
 
     console.log(`🔄 Memeriksa dan membuat basis data '${dbName}' jika belum ada...`);
-    const connection = await mysql.createConnection({ host, port, user, password });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
+    const connection = await mysql.createConnection({
+      host,
+      port,
+      user,
+      password,
+      ...(sslEnabled
+        ? {
+            ssl: {
+              rejectUnauthorized: sslRejectUnauthorized,
+              ...(process.env.DB_SSL_CA ? { ca: process.env.DB_SSL_CA } : {})
+            }
+          }
+        : {})
+    });
+    if (dbName !== 'defaultdb') {
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
+    }
     await connection.end();
     console.log(`✅ Basis data '${dbName}' siap digunakan.`);
 
