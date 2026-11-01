@@ -120,6 +120,17 @@ Data MySQL disimpan pada volume `mysql_data`, sehingga restart container tidak m
 
 Untuk deployment pada server Docker, ubah `FRONTEND_URL` dan `VITE_API_URL` menjadi domain HTTPS publik sebelum menjalankan `docker compose up -d --build`. Variabel `VITE_API_URL` tertanam saat frontend dibuild, jadi frontend harus dibuild ulang setelah nilainya berubah.
 
+### VPS dengan Aiven MySQL
+
+Jika MySQL di-host oleh Aiven, gunakan `docker-compose.aiven.yml` agar VPS hanya menjalankan frontend dan backend:
+
+```bash
+docker compose -f docker-compose.aiven.yml up -d --build
+docker compose -f docker-compose.aiven.yml exec backend npm run seed
+```
+
+Isi `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL=true`, dan `DB_SSL_REJECT_UNAUTHORIZED=false` pada file `.env` di VPS. Jangan membuka port MySQL `3306` pada VPS.
+
 ---
 
 ## 🌐 Panduan Deployment Online (CPMK 5)
