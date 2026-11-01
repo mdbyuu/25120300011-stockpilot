@@ -35,7 +35,7 @@ const handleRegister = async () => {
         <div class="brand-mark">
           <Warehouse :size="22" />
         </div>
-        <span class="brand-label">W-Inventory</span>
+        <span class="brand-label">StockPilot</span>
       </div>
 
       <h2 class="form-title">Buat Akun Baru</h2>

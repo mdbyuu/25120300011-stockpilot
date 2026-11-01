@@ -42,7 +42,7 @@ const navItems = [
         <Warehouse :size="22" />
       </div>
       <div class="brand-text">
-        <span class="brand-name">W-Inventory</span>
+        <span class="brand-name">StockPilot</span>
         <span class="brand-edition">Warehouse v2.0</span>
       </div>
     </div>
