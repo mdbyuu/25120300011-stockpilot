@@ -9,8 +9,8 @@ const authStore = useAuthStore();
 const router = useRouter();
 const toast = useToast();
 
-const email = ref('admin@gudang.local');
-const password = ref('password123');
+const email = ref('');
+const password = ref('');
 const showPassword = ref(false);
 const errorMessage = ref('');
 
@@ -25,10 +25,6 @@ const handleLogin = async () => {
   }
 };
 
-const setDemo = (type) => {
-  email.value = type === 'admin' ? 'admin@gudang.local' : 'staff@gudang.local';
-  password.value = 'password123';
-};
 </script>
 
 <template>
@@ -107,23 +103,6 @@ const setDemo = (type) => {
               <ArrowRight :size="16" />
             </button>
           </form>
-
-          <!-- Demo Quick Fill -->
-          <div class="demo-section">
-            <div class="demo-divider">
-              <span>Akun Demo UAS</span>
-            </div>
-            <div class="demo-buttons">
-              <button @click="setDemo('admin')" class="demo-btn demo-admin">
-                <span class="demo-dot"></span>
-                Admin Gudang
-              </button>
-              <button @click="setDemo('staff')" class="demo-btn demo-staff">
-                <span class="demo-dot"></span>
-                Staff Lapangan
-              </button>
-            </div>
-          </div>
 
           <p class="auth-switch">
             Belum punya akun?
@@ -352,74 +331,6 @@ const setDemo = (type) => {
   padding: 0.6875rem;
   font-size: 0.875rem;
 }
-
-/* Demo Section */
-.demo-section {
-  margin-top: 1.75rem;
-}
-
-.demo-divider {
-  text-align: center;
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.demo-divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--slate-200);
-}
-
-.demo-divider span {
-  position: relative;
-  background: #fff;
-  padding: 0 0.75rem;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--slate-400);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.demo-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.demo-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1.5px solid var(--slate-200);
-  background: #fff;
-  color: var(--slate-600);
-  transition: all 0.2s;
-}
-
-.demo-btn:hover {
-  border-color: var(--slate-300);
-  background: var(--slate-50);
-}
-
-.demo-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.demo-admin .demo-dot { background: var(--danger); }
-.demo-staff .demo-dot { background: var(--success); }
 
 .auth-switch {
   text-align: center;
