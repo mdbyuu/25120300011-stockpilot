@@ -38,7 +38,7 @@
 | **Admin Gudang** | `admin@gudang.local` | `password123` | Akses Penuh: Master Kategori, Produk, Mutasi, Opname, Hapus Data |
 | **Staff Lapangan** | `staff@gudang.local` | `password123` | Akses Operasional: Input Barang Masuk, Input Barang Keluar, Lihat Katalog |
 
-*(Tersedia tombol satu-klik pada halaman Login untuk pengujian instan)*.
+Gunakan form login secara manual. Tombol pengisian akun demo satu-klik telah dihapus dari halaman Login.
 
 ---
 
@@ -92,7 +92,7 @@
 
 ## 🐳 Menjalankan dengan Docker Compose
 
-Docker Compose menjalankan tiga service: frontend Vue/Nginx, backend Express, dan MySQL dengan volume persisten.
+Docker Compose menjalankan frontend Vue/Nginx dan backend Express. File `docker-compose.yml` juga tersedia untuk skenario yang menjalankan MySQL secara lokal.
 
 1. Pastikan Docker Desktop sudah berjalan.
 2. Buat file environment Docker:
@@ -122,23 +122,49 @@ Untuk deployment pada server Docker, ubah `FRONTEND_URL` dan `VITE_API_URL` menj
 
 ### VPS dengan Aiven MySQL
 
-Jika MySQL di-host oleh Aiven, gunakan `docker-compose.aiven.yml` agar VPS hanya menjalankan frontend dan backend:
+Deployment publik saat ini menggunakan VPS untuk frontend dan backend, sedangkan MySQL berjalan sebagai layanan terkelola di Aiven. Gunakan `docker-compose.aiven.yml` agar VPS tidak menjalankan container MySQL lokal:
 
 ```bash
-docker compose -f docker-compose.aiven.yml up -d --build
-docker compose -f docker-compose.aiven.yml exec backend npm run seed
+git pull origin main
+docker-compose -f docker-compose.aiven.yml up -d --build
 ```
 
-Isi `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL=true`, dan `DB_SSL_REJECT_UNAUTHORIZED=false` pada file `.env` di VPS. Jangan membuka port MySQL `3306` pada VPS.
+Isi `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_SSL=true`, dan `DB_SSL_REJECT_UNAUTHORIZED=false` pada file `.env` di VPS. Jangan membuka port MySQL `3306` pada VPS. Jalankan `npm run seed` hanya satu kali saat database Aiven belum memiliki tabel dan data awal.
+
+Port publik yang digunakan pada VPS dikonfigurasi melalui `.env`, misalnya:
+
+```env
+BACKEND_PORT=15002
+FRONTEND_PORT=18080
+VITE_API_URL=http://<VPS-IP>:15002/api
+FRONTEND_URL=http://<VPS-IP>:18080
+```
+
+Health check backend:
+
+```bash
+curl http://localhost:15002/api/health
+```
+
+Update frontend setelah perubahan Vue:
+
+```bash
+git pull origin main
+docker-compose -f docker-compose.aiven.yml build --no-cache frontend
+docker-compose -f docker-compose.aiven.yml up -d --no-deps frontend
+```
 
 ---
 
-## 🌐 Panduan Deployment Online (CPMK 5)
+## 🌐 Deployment Online (CPMK 5)
 
-Aplikasi siap di-deploy ke lingkungan cloud publik gratis:
-1. **Database:** Buat instance MySQL gratis di **Aiven for MySQL** atau **Railway MySQL**, lalu perbarui variabel environment `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, dan `DB_NAME`.
-2. **Backend:** Deploy repository folder `backend` ke **Render (Web Service)** dengan build command `npm install` dan start command `node server.js`.
-3. **Frontend:** Deploy folder `frontend` ke **Vercel** atau **Netlify** dengan build command `npm run build` dan output directory `dist`, serta atur environment variable `VITE_API_URL` mengarah ke URL live backend Render.
+Deployment publik menggunakan:
+
+1. **VPS:** Menjalankan container frontend Vue/Nginx dan backend Node.js/Express.
+2. **Aiven MySQL:** Menyediakan database MySQL terkelola dengan koneksi SSL.
+3. **Docker Compose:** Mengatur build, port, environment variable, dan restart policy frontend/backend.
+
+File `.env` hanya dibuat pada server dan tidak di-commit. Nilai sensitif seperti `DB_PASS` dan `JWT_SECRET` harus diisi melalui environment server. Setelah kode diperbarui, server mengambil commit terbaru dengan `git pull origin main`, kemudian frontend atau backend dibuild ulang sesuai komponen yang berubah.
 
 ---
 
